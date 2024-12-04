@@ -1,10 +1,8 @@
 package model.validator;
 
-
 import model.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +48,7 @@ public class UserValidator {
         if (password == null || password.trim().isEmpty()){
             return false;
         }
-        // black list
+
         Pattern specialCharactersPattern = Pattern.compile("[^A-Za-z0-9]");
         Matcher specialCharactersMatcher = specialCharactersPattern.matcher(password);
 

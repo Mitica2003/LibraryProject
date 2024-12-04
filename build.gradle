@@ -13,9 +13,16 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'mysql:mysql-connector-java:8.0.33'
+
+    implementation 'com.itextpdf:itext7-core:7.2.5'
+    implementation 'org.openjfx:javafx-controls:20'
+
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
@@ -25,7 +32,7 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
-mainClassName = 'launcher.Main'
+mainClassName='launcher.Main'
 
 jar {
     manifest {

@@ -1,23 +1,21 @@
 package database;
+
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static database.Constants.Rights.RIGHTS;
 import static database.Constants.Roles.ROLES;
 import static database.Constants.Schemas.SCHEMAS;
 import static database.Constants.getRolesRights;
 
-// Script - code that automates some steps or processes
+//Script
 
 public class Bootstrap {
-
     private static RightsRolesRepository rightsRolesRepository;
 
     public static void main(String[] args) throws SQLException {
@@ -43,7 +41,7 @@ public class Bootstrap {
                     "TRUNCATE `user_role`;",
                     "DROP TABLE `user_role`;",
                     "TRUNCATE `role`;",
-                    "DROP TABLE  `book`, `role`, `user`;"
+                    "DROP TABLE  `book`, `role`, `user`, sale;"
             };
 
             Arrays.stream(dropStatements).forEach(dropStatement -> {

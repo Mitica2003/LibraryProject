@@ -4,7 +4,7 @@ import model.Right;
 import model.Role;
 import model.User;
 
-import java.util.List;
+import java.util.*;
 
 public interface RightsRolesRepository {
     void addRole(String role);

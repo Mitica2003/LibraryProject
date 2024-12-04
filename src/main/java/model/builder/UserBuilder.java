@@ -1,11 +1,11 @@
 package model.builder;
 
-import java.util.List;
 import model.Role;
 import model.User;
 
-public class UserBuilder {
+import java.util.*;
 
+public class UserBuilder {
     private User user;
 
     public UserBuilder(){
@@ -35,5 +35,4 @@ public class UserBuilder {
     public User build(){
         return user;
     }
-
 }

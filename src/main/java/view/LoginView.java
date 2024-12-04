@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginView {
-
     private TextField userTextField;
     private PasswordField passwordField;
     private Button signInButton;

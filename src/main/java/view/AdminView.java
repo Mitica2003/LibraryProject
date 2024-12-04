@@ -2,6 +2,7 @@ package view;
 
 import view.model.BookDTO;
 import view.model.SaleDTO;
+import view.model.UserDTO;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,46 +16,57 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.util.*;
+import java.util.List;
 
-
-public class BookView {
+public class AdminView {
     private TableView bookTableView;
     private TableView saleTableView;
+    private TableView userTableView;
     private ObservableList<BookDTO> booksObservableList;
     private ObservableList<SaleDTO> saleObservableList;
+    private ObservableList<UserDTO> usersObservabileList;
     private TextField authorTextField;
     private TextField titleTextField;
     private TextField amounTextField;
     private TextField priceTextField;
     private TextField saleTitleBookTextField;
     private TextField saleQuantityTextField;
+    private TextField usernameTextField;
+    private TextField passwordTextField;
     private Label authorLabel;
     private Label titleLabel;
     private Label amountLabel;
     private Label priceLabel;
     private Label saleTitleBookLabel;
     private Label saleQuantityLabel;
+    private Label usernameLabel;
+    private Label passwordLabel;
     private Button saveButton;
     private Button deleteButton;
     private Button saleButton;
+    private Button registerUserButton;
+    private Button fireUserButton;
+    private Button pdfButton;
 
-    public BookView(Stage primaryStage, List<BookDTO> bookDTOS, List<SaleDTO> saleDTOS) {
+    public AdminView(Stage primaryStage, List<BookDTO> bookDTOS, List<SaleDTO> saleDTOS, List<UserDTO> userDTOs) {
         primaryStage.setTitle("Library");
 
         GridPane gridPane = new GridPane();
         initializeGridPane(gridPane);
 
-        Scene scene = new Scene(gridPane, 1100, 500);
+        Scene scene = new Scene(gridPane, 1500, 600);
         primaryStage.setScene(scene);
 
         booksObservableList = FXCollections.observableArrayList(bookDTOS);
         saleObservableList = FXCollections.observableArrayList(saleDTOS);
+        usersObservabileList = FXCollections.observableArrayList(userDTOs);
 
         initTableViewBook(gridPane);
         initTableSale(gridPane);
+        initTableViewUsers(gridPane);
 
         initSaveOptions(gridPane);
+        initAdminOptions(gridPane);
 
         primaryStage.show();
     }
@@ -102,6 +114,20 @@ public class BookView {
         gridPane.add(saleTableView,5,0, 5,1);
     }
 
+    private void initTableViewUsers(GridPane gridPane) {
+        userTableView = new TableView<UserDTO>();
+        userTableView.setPlaceholder(new Label("No rows to display"));
+
+        TableColumn<UserDTO, String> usernameColumn = new TableColumn<UserDTO, String>("Username");
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+
+        userTableView.getColumns().addAll(usernameColumn);
+
+        userTableView.setItems(usersObservabileList);
+
+        gridPane.add(userTableView,10, 0, 5, 1);
+    }
+
     private void initSaveOptions(GridPane gridPane){
         titleLabel = new Label("Title");
         gridPane.add(titleLabel, 1, 1);
@@ -147,7 +173,29 @@ public class BookView {
 
         saleButton = new Button("Sale");
         gridPane.add(saleButton, 5, 3);
+    }
 
+    private void initAdminOptions(GridPane gridPane) {
+        usernameLabel = new Label("Username");
+        gridPane.add(usernameLabel, 1, 4);
+
+        usernameTextField = new TextField();
+        gridPane.add(usernameTextField, 2, 4);
+
+        passwordLabel = new Label("Password");
+        gridPane.add(passwordLabel, 3, 4);
+
+        passwordTextField = new TextField();
+        gridPane.add(passwordTextField, 4, 4);
+
+        registerUserButton = new Button("Add user");
+        gridPane.add(registerUserButton, 5, 4);
+
+        fireUserButton = new Button("Delete user");
+        gridPane.add(fireUserButton, 6, 4);
+
+        pdfButton = new Button("Generate Report");
+        gridPane.add(pdfButton, 7, 4);
     }
 
     private void initializeGridPane(GridPane gridPane){
@@ -171,6 +219,18 @@ public class BookView {
 
     public void addSaleButtonListener(EventHandler<ActionEvent> saleButtonListener){
         saleButton.setOnAction(saleButtonListener);
+    }
+
+    public void addRegisterUserListener(EventHandler<ActionEvent> registerUserButtonListener){
+        registerUserButton.setOnAction(registerUserButtonListener);
+    }
+
+    public void addDeleteUserListener(EventHandler<ActionEvent> deleteUserButtonListener){
+        fireUserButton.setOnAction(deleteUserButtonListener);
+    }
+
+    public void addGenerateReportButtonListener(EventHandler<ActionEvent> handler) {
+        pdfButton.setOnAction(handler);
     }
 
     public void displayAlertMessage(String titleInformation, String headerInformation, String contextInformation){
@@ -203,7 +263,6 @@ public class BookView {
     }
 
     public int getSaleQuantity() {
-        //return Integer.parseInt(saleQuantityTextField.getText());
         String quantityText = saleQuantityTextField.getText();
         if (quantityText == null || quantityText.trim().isEmpty()) {
             return 0;
@@ -215,6 +274,14 @@ public class BookView {
         }
     }
 
+    public String getUsername() {
+        return usernameTextField.getText();
+    }
+
+    public String getPassword() {
+        return passwordTextField.getText();
+    }
+
     public ObservableList<BookDTO> getBooksObservableList(){
         return booksObservableList;
     }
@@ -223,8 +290,16 @@ public class BookView {
         return saleObservableList;
     }
 
+    public ObservableList<UserDTO> getUsersObservabileList(){
+        return usersObservabileList;
+    }
+
     public void addBookToObservableList(BookDTO bookDTO){
         this.booksObservableList.add(bookDTO);
+    }
+
+    public void addUserToObservableList(UserDTO userDTO){
+        this.usersObservabileList.add(userDTO);
     }
 
     public void updateBookToObservabileList(BookDTO bookDTO) {
@@ -238,6 +313,10 @@ public class BookView {
 
     public void removeBookFromObservableList(BookDTO bookDTO){
         this.booksObservableList.remove(bookDTO);
+    }
+
+    public void removeUserFromObservableList(UserDTO userDTO){
+        this.usersObservabileList.remove(userDTO);
     }
 
     public void addSaleToObservableList(SaleDTO saleDTO){
@@ -254,5 +333,9 @@ public class BookView {
 
     public TableView getSaleTableView(){
         return saleTableView;
+    }
+
+    public TableView getUserTableView(){
+        return userTableView;
     }
 }

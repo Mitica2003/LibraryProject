@@ -1,7 +1,8 @@
 package service.user;
+
+import model.builder.UserBuilder;
 import model.Role;
 import model.User;
-import model.builder.UserBuilder;
 import model.validator.Notification;
 import model.validator.UserValidator;
 import repository.security.RightsRolesRepository;
@@ -11,20 +12,26 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Collections;
 
-import static database.Constants.Roles.CUSTOMER;
-
-public class AuthenticationImplementation implements AuthenticationService {
-
+import static database.Constants.Roles.*;
+public class AuthentificationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
+
     private final RightsRolesRepository rightsRolesRepository;
 
-    public AuthenticationImplementation(UserRepository userRepository, RightsRolesRepository rightsRolesRepository) {
+    public AuthentificationServiceImpl(UserRepository userRepository, RightsRolesRepository rightsRolesRepository) {
         this.userRepository = userRepository;
         this.rightsRolesRepository = rightsRolesRepository;
     }
 
     @Override
     public Notification<Boolean> register(String username, String password) {
+        Notification<Boolean> userRegisterNotification = new Notification<>();
+
+        if (userRepository.existsByUsername(username)) {
+            userRegisterNotification.addError("An account with this username already exists!");
+            userRegisterNotification.setResult(Boolean.FALSE);
+            return userRegisterNotification;
+        }
 
         Role customerRole = rightsRolesRepository.findRoleByTitle(CUSTOMER);
 
@@ -35,9 +42,7 @@ public class AuthenticationImplementation implements AuthenticationService {
                 .build();
 
         UserValidator userValidator = new UserValidator(user);
-
         boolean userValid = userValidator.validate();
-        Notification<Boolean> userRegisterNotification = new Notification<>();
 
         if (!userValid){
             userValidator.getErrors().forEach(userRegisterNotification::addError);
@@ -51,8 +56,50 @@ public class AuthenticationImplementation implements AuthenticationService {
     }
 
     @Override
+    public Notification<Boolean> registerEmployee(String username, String password){
+        Notification<Boolean> userRegisterNotification = new Notification<>();
+        if(userRepository.existsByUsername(username)) {
+            userRegisterNotification.addError(username + " already exists");
+            userRegisterNotification.setResult(Boolean.FALSE);
+            return userRegisterNotification;
+        }
+
+        Role role = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
+
+        User user = new UserBuilder()
+                .setUsername(username)
+                .setPassword(password)
+                .setRoles(Collections.singletonList(role))
+                .build();
+
+        UserValidator userValidator = new UserValidator(user);
+
+        boolean userValid = userValidator.validate();
+
+
+        if (!userValid){
+            userValidator.getErrors().forEach(userRegisterNotification::addError);
+            userRegisterNotification.setResult(Boolean.FALSE);
+        } else {
+            user.setPassword(hashPassword(password));
+            userRegisterNotification.setResult(userRepository.save(user));
+        }
+
+        return userRegisterNotification;
+
+    }
+
+    @Override
     public Notification<User> login(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, hashPassword(password));
+    }
+
+    public boolean deleteUser(User user) {
+        if (user.getUsername().equals("ardeleanmitica2016@gmail.com")) {
+            return false;
+        }
+
+        return userRepository.deleteUser(user);
     }
 
     @Override

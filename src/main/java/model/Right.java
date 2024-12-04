@@ -1,7 +1,6 @@
 package model;
 
 public class Right {
-
     private Long id;
 
     private String right;

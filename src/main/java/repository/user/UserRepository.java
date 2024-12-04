@@ -6,7 +6,6 @@ import model.validator.Notification;
 import java.util.*;
 
 public interface UserRepository {
-
     List<User> findAll();
 
     Notification<User> findByUsernameAndPassword(String username, String password);
@@ -14,6 +13,8 @@ public interface UserRepository {
     boolean save(User user);
 
     void removeAll();
+
+    boolean deleteUser(User user);
 
     boolean existsByUsername(String username);
 }

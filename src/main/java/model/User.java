@@ -2,8 +2,6 @@ package model;
 
 import java.util.*;
 
-// BEAN
-
 public class User {
 
     private Long id;
