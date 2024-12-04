@@ -1,10 +1,7 @@
 package database;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 import static database.Constants.Rights.BUY_BOOK;
 import static database.Constants.Rights.CREATE_BOOK;
@@ -17,18 +14,19 @@ import static database.Constants.Roles.ADMINISTRATOR;
 import static database.Constants.Roles.CUSTOMER;
 import static database.Constants.Roles.EMPLOYEE;
 import static database.Constants.Roles.ROLES;
-public class Constants {
 
+public class Constants {
     public static Map<String, List<String>> getRolesRights() {
         Map<String, List<String>> rolesRights = new HashMap<>();
-        for (String role : ROLES) {
+        for(String role : ROLES) {
             rolesRights.put(role, new ArrayList<>());
         }
+
         rolesRights.get(ADMINISTRATOR).addAll(Arrays.asList(RIGHTS));
 
         rolesRights.get(EMPLOYEE).addAll(Arrays.asList(CREATE_BOOK, DELETE_BOOK, UPDATE_BOOK, SELL_BOOK));
 
-        rolesRights.get(CUSTOMER).addAll(Arrays.asList(BUY_BOOK, RETURN_BOOK));  // Asa doresc eu
+        rolesRights.get(CUSTOMER).addAll(Arrays.asList(SELL_BOOK, BUY_BOOK, RETURN_BOOK));
 
         return rolesRights;
     }
